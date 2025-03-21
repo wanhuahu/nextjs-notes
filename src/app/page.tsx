@@ -62,11 +62,13 @@ export default function Home() {
 
   // Handle deleting a note
   const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`http://localhost:3001/notes/${id}`);
-      fetchNotes(); // Refresh the list
-    } catch (error) {
-      console.error('Error deleting note:', error);
+    if (window.confirm('Are you sure you want to delete this note?')) {
+      try {
+        await axios.delete(`http://localhost:3001/notes/${id}`);
+        fetchNotes(); // Refresh the list
+      } catch (error) {
+        console.error('Error deleting note:', error);
+      }
     }
   };
 
