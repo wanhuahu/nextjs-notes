@@ -103,28 +103,37 @@ export default function Home() {
       </form>
 
       <h2 style={styles.subHeading}>Notes List</h2>
-      <ul style={styles.notesList}>
-        {notes.map((note) => (
-          <li key={note._id} style={styles.noteItem}>
-            <h3 style={styles.noteTitle}>{note.title}</h3>
-            <p style={styles.noteContent}>{note.content}</p>
-            <div style={styles.buttonGroup}>
-              <button onClick={() => handleEdit(note)} style={styles.editButton}>
-                Edit
-              </button>
-              <button onClick={() => handleDelete(note._id)} style={styles.deleteButton}>
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {notes.length === 0 ? (
+        <p style={styles.emptyState}>No notes found. Add a new note to get started!</p>
+      ) : (
+        <ul style={styles.notesList}>
+          {notes.map((note) => (
+            <li key={note._id} style={styles.noteItem}>
+              <h3 style={styles.noteTitle}>{note.title}</h3>
+              <p style={styles.noteContent}>{note.content}</p>
+              <div style={styles.buttonGroup}>
+                <button onClick={() => handleEdit(note)} style={styles.editButton}>
+                  Edit
+                </button>
+                <button onClick={() => handleDelete(note._id)} style={styles.deleteButton}>
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+)}
     </div>
   );
 }
 
 // CSS Styles
 const styles = {
+  emptyState: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    color: '#666',
+  },
   container: {
     maxWidth: '800px',
     margin: '0 auto',
