@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Define the base URL as a constant
+const API_BASE_URL = 'http://localhost:3001';
+
 interface Note {
   _id: string;
   title: string;
@@ -14,14 +17,18 @@ export default function Home() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [formData, setFormData] = useState({ title: '', content: '' });
   const [editId, setEditId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch all notes
   const fetchNotes = async () => {
+    setIsLoading(true);
     try {
-      const response = await axios.get<Note[]>('http://localhost:3001/notes');
+      const response = await axios.get<Note[]>(`${API_BASE_URL}/notes`);
       setNotes(response.data);
     } catch (error) {
       console.error('Error fetching notes:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -41,10 +48,10 @@ export default function Home() {
     try {
       if (editId) {
         // Update existing note
-        await axios.put(`http://localhost:3001/notes/${editId}`, formData);
+        await axios.put(`${API_BASE_URL}/notes/${editId}`, formData);
       } else {
         // Add new note
-        await axios.post('http://localhost:3001/notes', formData);
+        await axios.post(`${API_BASE_URL}/notes`, formData);
       }
       setFormData({ title: '', content: '' });
       setEditId(null);
@@ -64,7 +71,7 @@ export default function Home() {
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this note?')) {
       try {
-        await axios.delete(`http://localhost:3001/notes/${id}`);
+        await axios.delete(`${API_BASE_URL}/notes/${id}`);
         fetchNotes(); // Refresh the list
       } catch (error) {
         console.error('Error deleting note:', error);
@@ -103,7 +110,9 @@ export default function Home() {
       </form>
 
       <h2 style={styles.subHeading}>Notes List</h2>
-      {notes.length === 0 ? (
+      {isLoading ? (
+        <p style={styles.loading}>Loading...</p>
+      ) : notes.length === 0 ? (
         <p style={styles.emptyState}>No notes found. Add a new note to get started!</p>
       ) : (
         <ul style={styles.notesList}>
@@ -122,18 +131,13 @@ export default function Home() {
             </li>
           ))}
         </ul>
-)}
+      )}
     </div>
   );
 }
 
 // CSS Styles
 const styles = {
-  emptyState: {
-    textAlign: 'center',
-    fontSize: '1.2rem',
-    color: '#666',
-  },
   container: {
     maxWidth: '800px',
     margin: '0 auto',
@@ -231,5 +235,15 @@ const styles = {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+  },
+  loading: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    color: '#666',
+  },
+  emptyState: {
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    color: '#666',
   },
 };
