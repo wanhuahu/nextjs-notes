@@ -10,7 +10,7 @@ interface Note {
   _id: string;
   title: string;
   content: string;
-  createdAt: string;
+  createdAt: string; // Ensure createdAt is part of the interface
 }
 
 export default function Home() {
@@ -24,7 +24,11 @@ export default function Home() {
     setIsLoading(true);
     try {
       const response = await axios.get<Note[]>(`${API_BASE_URL}/notes`);
-      setNotes(response.data);
+      // Sort notes by createdAt (newest first)
+      const sortedNotes = response.data.sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setNotes(sortedNotes);
     } catch (error) {
       console.error('Error fetching notes:', error);
     } finally {
@@ -79,6 +83,12 @@ export default function Home() {
     }
   };
 
+  // Format createdAt date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString(); // Adjust the format as needed
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Notes</h1>
@@ -120,6 +130,7 @@ export default function Home() {
             <li key={note._id} style={styles.noteItem}>
               <h3 style={styles.noteTitle}>{note.title}</h3>
               <p style={styles.noteContent}>{note.content}</p>
+              <p style={styles.noteDate}>Created: {formatDate(note.createdAt)}</p>
               <div style={styles.buttonGroup}>
                 <button onClick={() => handleEdit(note)} style={styles.editButton}>
                   Edit
@@ -214,6 +225,11 @@ const styles = {
   noteContent: {
     fontSize: '1rem',
     color: '#555',
+    marginBottom: '10px',
+  },
+  noteDate: {
+    fontSize: '0.875rem',
+    color: '#777',
     marginBottom: '10px',
   },
   buttonGroup: {
