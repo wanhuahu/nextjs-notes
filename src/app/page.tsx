@@ -71,42 +71,154 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Notes</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Title:</label>
+    <div style={styles.container}>
+      <h1 style={styles.heading}>Notes</h1>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Title:</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
             required
+            style={styles.input}
           />
         </div>
-        <div>
-          <label>Content:</label>
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Content:</label>
           <textarea
             name="content"
             value={formData.content}
             onChange={handleInputChange}
             required
+            style={styles.textarea}
           />
         </div>
-        <button type="submit">{editId ? 'Update Note' : 'Add Note'}</button>
+        <button type="submit" style={styles.button}>
+          {editId ? 'Update Note' : 'Add Note'}
+        </button>
       </form>
 
-      <h2>Notes List</h2>
-      <ul>
+      <h2 style={styles.subHeading}>Notes List</h2>
+      <ul style={styles.notesList}>
         {notes.map((note) => (
-          <li key={note._id} style={{ marginBottom: '10px' }}>
-            <h3>{note.title}</h3>
-            <p>{note.content}</p>
-            <button onClick={() => handleEdit(note)}>Edit</button>
-            <button onClick={() => handleDelete(note._id)}>Delete</button>
+          <li key={note._id} style={styles.noteItem}>
+            <h3 style={styles.noteTitle}>{note.title}</h3>
+            <p style={styles.noteContent}>{note.content}</p>
+            <div style={styles.buttonGroup}>
+              <button onClick={() => handleEdit(note)} style={styles.editButton}>
+                Edit
+              </button>
+              <button onClick={() => handleDelete(note._id)} style={styles.deleteButton}>
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
     </div>
   );
 }
+
+// CSS Styles
+const styles = {
+  container: {
+    maxWidth: '800px',
+    margin: '0 auto',
+    padding: '20px',
+    fontFamily: 'Arial, sans-serif',
+  },
+  heading: {
+    fontSize: '2rem',
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: '20px',
+  },
+  form: {
+    backgroundColor: '#f9f9f9',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    marginBottom: '20px',
+  },
+  formGroup: {
+    marginBottom: '15px',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '5px',
+    fontWeight: 'bold',
+    color: '#555',
+  },
+  input: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ddd',
+    fontSize: '1rem',
+  },
+  textarea: {
+    width: '100%',
+    padding: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ddd',
+    fontSize: '1rem',
+    minHeight: '100px',
+  },
+  button: {
+    padding: '10px 20px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+  },
+  subHeading: {
+    fontSize: '1.5rem',
+    color: '#333',
+    marginBottom: '15px',
+  },
+  notesList: {
+    listStyleType: 'none',
+    padding: '0',
+  },
+  noteItem: {
+    backgroundColor: '#fff',
+    padding: '15px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    marginBottom: '10px',
+  },
+  noteTitle: {
+    fontSize: '1.25rem',
+    color: '#333',
+    marginBottom: '10px',
+  },
+  noteContent: {
+    fontSize: '1rem',
+    color: '#555',
+    marginBottom: '10px',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '10px',
+  },
+  editButton: {
+    padding: '5px 10px',
+    backgroundColor: '#28a745',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+  deleteButton: {
+    padding: '5px 10px',
+    backgroundColor: '#dc3545',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+  },
+};
