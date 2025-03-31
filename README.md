@@ -3,6 +3,8 @@
 
 git clone https://github.com/wanhuahu/nextjs-notes
 
+cd nextjs-notes
+
 npm install
 
 npm run dev
